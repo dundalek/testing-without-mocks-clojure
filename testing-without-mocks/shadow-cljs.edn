@@ -1,0 +1,9 @@
+{:builds
+ {:main
+  {:target :node-script
+   :output-to "out/main.js"
+   :main testing-without-mocks.run/-main}
+
+  :test
+  {:target :node-test
+   :output-to "out/node-tests.js"}}}

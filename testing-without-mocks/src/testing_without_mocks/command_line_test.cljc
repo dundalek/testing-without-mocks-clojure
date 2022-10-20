@@ -5,9 +5,17 @@
 
 (deftest command-line
   (testing "provides first command-line argument"
-    (binding [*command-line-args* ["first_argument"]]
-      (let [cli (cli/create)]
-        (is (= "first_argument" (cli/arg cli))))))
+    #?(:clj (binding [*command-line-args* ["first_argument"]]
+             (let [cli (cli/create)]
+               (is (= "first_argument" (cli/arg cli)))))
+
+       :cljs (let [saved-args js/process.argv]
+               (set! js/process.argv #js ["ignore 1" "ignore 2" "first_argument"])
+               (try
+                 (let [cli (cli/create)]
+                   (is (= "first_argument" (cli/arg cli))))
+                 (finally
+                   (set! js/process.argv saved-args))))))
 
   (testing "writes to console"
     (is (= "my output\n"

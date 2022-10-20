@@ -14,7 +14,10 @@
   (get-last-output [_] @!last-output))
 
 (defn create []
-  (->CommandLine *command-line-args* println (atom nil)))
+  (->CommandLine #?(:clj *command-line-args*
+                    :cljs (drop 2 js/process.argv))
+                 println
+                 (atom nil)))
 
 (defn create-null [& args]
   (->CommandLine args (fn [_]) (atom nil)))

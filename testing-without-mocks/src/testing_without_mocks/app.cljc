@@ -3,7 +3,7 @@
 
 ;; Following function courtesy of https://rosettacode.org/wiki/Rot-13#Clojure
 ;; Distributed under https://creativecommons.org/licenses/by-sa/4.0/
-(let [A (into #{} "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+(let [A (interleave "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "abcdefghijklmnopqrstuvwxyz")
       Am (->> (cycle A) (drop 26) (take 52) (zipmap A))]
   (defn rot13 [^String in]
     (->> (replace Am in)
