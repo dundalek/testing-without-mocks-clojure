@@ -12,3 +12,15 @@ Run tests with:
 ```sh
 $ clojure -M:test
 ```
+
+### ClojureScript version
+
+Run the command line program:
+```sh
+$ clojure -Mshadow compile main && node out/main.js "Hello World"
+Uryyb Jbeyq
+```
+
+Run tests with:
+```sh
+$ clojure -Mshadow compile test && node out/node-tests.js
