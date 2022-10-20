@@ -1,0 +1,17 @@
+(ns testing-without-mocks.app-test
+  (:require
+   [clojure.test :refer [deftest is testing]]
+   [darkleaf.di.core :as di]
+   [testing-without-mocks.app :as app]
+   [testing-without-mocks.command-line :as cli]))
+
+(deftest rot-13-app
+  (testing "encodes command-line argument and outputs the result"
+    (let [cli (cli/create-null "my_cli_arg")]
+      (app/run {`cli/create cli})
+      (is (= "zl_pyv_net" (cli/get-last-output cli)))))
+
+  (testing "encodes command-line argument and outputs the result with di"
+    (let [cli (cli/create-null "my_cli_arg")]
+      (di/start `app/run {`cli/create cli})
+      (is (= "zl_pyv_net" (cli/get-last-output cli))))))

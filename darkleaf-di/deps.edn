@@ -1,0 +1,6 @@
+ {:deps {org.clojars.darkleaf/di {:mvn/version "1.0.1"}}
+
+  :aliases
+  {:run {:main-opts ["-m" "testing-without-mocks.run"]}
+   :test {:main-opts ["-m" "kaocha.runner"]
+          :extra-deps {lambdaisland/kaocha {:mvn/version "1.70.1086"}}}}}
