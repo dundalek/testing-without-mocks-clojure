@@ -38,3 +38,9 @@ Run tests with:
 ```sh
 $ clojure -Mshadow compile test && node out/node-tests.js
 ```
+
+## Functional example
+
+The original example is heavily based on Object-Oriented Programming, it constructs objects and then calls methods on the. That is not very idiomatic in Clojure. Many APIs for interacting with side-effectful resources like getting environment variables, accessing system properties or reading files are provided by just calling impure functions without any object construction.
+
+To experiment with such approach I created a different toy [example program](functional-example).
