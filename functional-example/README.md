@@ -3,7 +3,7 @@
 
 This is kind of a contrived example program, but exercises function-based platform APIs with infrastructure wrappers like getting environment variables, accessing system properties and reading files.
 
-- The program counts and prints the number of declared deps `:aliases` in deps file.
+- The program counts and prints the number of declared `:aliases` in deps file.
 - It tries to use the `deps.edn` file in the current working directory. When it does not exist or is not valid EDN it fallbacks to the user file in `~/.clojure/deps.edn`.
 - If neither dep file is readable it defaults to printing 42.
 
