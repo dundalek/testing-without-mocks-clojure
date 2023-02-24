@@ -6,15 +6,25 @@
   (:import
    (java.io FileNotFoundException)))
 
-;; Contract Tests to check that test doubles stay behaving the same as the real infrastructure.
-;; unit tests OS vs 3rd party resources
-;; Paranoic Telemetry
+;; Contract Tests to ensure faithfulnes of our infrastructure test doubles,
+;; checking they mimic the behavior of the third-party code exactly.
+
+;; In this example program we use resources provided by the local
+;; Operating System which are reliable enough that we can have unit tests to
+;; compare test doubles to the outputs directly.
+
+;; In real scenarios when using services across network boundaries, we can:
+;; 1) Encode the contract as specs or malli schemas.
+;; 2) Have unit tests to check that test doubles produce outputs according to the contract.
+;; 3) Set up instrumentation in production with Paranoic Telemetry to get
+;; alerted in case our model of the contract no longer matches the reality.
+
 (deftest slurp-test
   (doseq [[title wrapped-slurp] [["real" infra/slurp]
                                  ["null" (make-null-slurp {"README.md" "abc"})]]]
     (testing title
       (testing "returns string when file exists"
-        ;; using README.md, in practice can have dedicated fixtures
+        ;; using README.md file, in practice could have dedicated fixtures
         (is (string? (wrapped-slurp "README.md"))))
 
       (testing "throws when file does not exist"

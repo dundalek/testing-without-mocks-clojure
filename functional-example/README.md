@@ -1,7 +1,7 @@
 
-# Deps.edn alias counter program
+# Deps.edn alias counter
 
-It is kind of contrived example, but exercises platform APIs with infrastructure wrappers, for example getting environment variables, accessing system properties and reading files.
+This is kind of a contrived example program, but exercises function-based platform APIs with infrastructure wrappers like getting environment variables, accessing system properties and reading files.
 
 - The program counts and prints the number of declared deps `:aliases` in deps file.
 - It tries to use the `deps.edn` file in the current working directory. When it does not exist or is not valid EDN it fallbacks to the user file in `~/.clojure/deps.edn`.
@@ -9,7 +9,15 @@ It is kind of contrived example, but exercises platform APIs with infrastructure
 
 Run the command line program:
 ```sh
+$ cd functional-example
 $ clojure -M:run
+```
+
+To exercise the path of counting the aliases in user deps run in the root of the repo:  
+(We could perhaps add a CLI argument switch?)
+```sh
+$ cd ..
+$ clj -Sdeps '{:paths ["functional-example/src"]}' -M -m functional-example.main
 ```
 
 Run tests with:
