@@ -16,3 +16,13 @@ Run tests with:
 ```sh
 $ clojure -M:test
 ```
+
+Run tests in watch mode:
+```sh
+$ clojure -M:test --watch
+```
+
+Generate code coverage report:
+```sh
+$ clojure -M:test:coverage
+```

@@ -3,3 +3,4 @@
 .clj-kondo/.cache
 .shadow-cljs
 out
+target
