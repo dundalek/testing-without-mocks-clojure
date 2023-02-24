@@ -1,30 +1,32 @@
 (ns functional-example.infrastructure
-  (:refer-clojure :exclude [slurp]))
+  (:refer-clojure :exclude [slurp])
+  (:import
+   (java.io FileNotFoundException)))
 
 ;; Infrastructure wrappers
 
 ;; in case of Less stable 3rd party - can adapt
 (def slurp clojure.core/slurp)
 
-(defn make-null-slurp [file-map]
+(defn make-null-slurp [& {:as file-map}]
   (fn [filename]
     (if (contains? file-map filename)
       (get file-map filename)
-      ;; maybe throw FileNotFoundException properly
-      (Exception. "No such file or directory"))))
+      (throw (FileNotFoundException.
+               (str filename " (No such file or directory)"))))))
 
 ;; Thin Wrapper pattern
 (defn get-system-property [prop]
   (System/getProperty prop))
 
-(defn make-null-get-system-property [prop-map]
+(defn make-null-get-system-property [& {:as prop-map}]
   (fn [prop]
     (get prop-map prop)))
 
 (defn getenv [name]
   (System/getenv name))
 
-(defn make-null-getenv [env-map]
+(defn make-null-getenv [& {:as env-map}]
   (fn [name]
     (get env-map name)))
 
