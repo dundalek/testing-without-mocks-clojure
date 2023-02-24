@@ -1,4 +1,4 @@
  {:aliases
-  {:run {:main-opts ["-m" "example.app"]}
+  {:run {:main-opts ["-m" "functional-example.main"]}
    :test {:main-opts ["-m" "kaocha.runner"]
           :extra-deps {lambdaisland/kaocha {:mvn/version "1.70.1086"}}}}}

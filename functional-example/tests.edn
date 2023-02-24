@@ -1,5 +1,4 @@
 #kaocha/v1
  {:tests [{:id :unit
-           :test-paths ["src"]
-           ;; FIXME remove
-           :ns-patterns [".*"]}]}
+           ;; add src to test paths for co-located tests
+           :test-paths ["src"]}]}
