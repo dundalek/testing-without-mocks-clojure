@@ -16,7 +16,7 @@
     (if (contains? file-map filename)
       (get file-map filename)
       (throw (FileNotFoundException.
-               (str filename " (No such file or directory)"))))))
+              (str filename " (No such file or directory)"))))))
 
 ;; Thin Wrapper pattern: We don't cover the whole surface of what Java provides,
 ;; but only the functionality we use.

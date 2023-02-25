@@ -1,10 +1,11 @@
 (ns functional-example.app
   (:require
    [clojure.edn :as edn]
-   ;; A-Frame Architecture: app layer coordinates the logic and infrastructure
-   ;; layers, which do not have dependencies between each other.
    [functional-example.infrastructure :as infra]
    [functional-example.logic :as logic]))
+
+;; A-Frame Architecture: app layer coordinates the logic and infrastructure
+;; layers, which do not have dependencies between each other.
 
 ;; Logic Sandwich pattern: Application layer reads inputs using infrastructure
 ;; layer and processes them using pure logic layer.

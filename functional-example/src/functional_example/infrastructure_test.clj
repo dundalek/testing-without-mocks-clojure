@@ -1,8 +1,7 @@
 (ns functional-example.infrastructure-test
   (:require
    [clojure.test :refer [deftest is testing]]
-   [functional-example.infrastructure :as infra
-    :refer [make-null-cwd make-null-home-dir make-null-slurp]])
+   [functional-example.infrastructure :as infra])
   (:import
    (java.io FileNotFoundException)))
 
@@ -21,7 +20,7 @@
 
 (deftest slurp-test
   (doseq [[title wrapped-slurp] [["real" infra/slurp]
-                                 ["null" (make-null-slurp {"README.md" "abc"})]]]
+                                 ["null" (infra/make-null-slurp {"README.md" "abc"})]]]
     (testing title
       (testing "returns string when file exists"
         ;; using README.md file, in practice could have dedicated fixtures
@@ -61,14 +60,14 @@
 
 (deftest home-dir-test
   (testing "nullable uses embedded stub with a sensible default"
-    (is (= "/home/someuser" ((make-null-home-dir)))))
+    (is (= "/home/someuser" ((infra/make-null-home-dir)))))
 
   (testing "nullable can be configured"
-    (is (= "/home/otheruser" ((make-null-home-dir {:path "/home/otheruser"}))))))
+    (is (= "/home/otheruser" ((infra/make-null-home-dir {:path "/home/otheruser"}))))))
 
 (deftest cwd-test
   (testing "nullable uses embedded stub with a sensible default"
-    (is (= "/some/current/directory"  ((make-null-cwd)))))
+    (is (= "/some/current/directory"  ((infra/make-null-cwd)))))
 
   (testing "nullable can be configured"
-    (is (= "/another/directory" ((make-null-cwd {:path "/another/directory"}))))))
+    (is (= "/another/directory" ((infra/make-null-cwd {:path "/another/directory"}))))))
