@@ -34,10 +34,10 @@
 ;; before passing them to the function.
 ;; But imagine that these calls could go across services in a real app, in which
 ;; case short-circuiting is desirable to avoid making unnecessary requests.
-(defn- count-system-aliases-impl [cwd home-dir count-deps-aliases]
+(defn- count-system-aliases-impl [cwd home-dir join-paths count-deps-aliases]
   (or
-   (count-deps-aliases (str (cwd) "/deps.edn"))
-   (count-deps-aliases (str (home-dir) "/.clojure/deps.edn"))
+   (count-deps-aliases (join-paths (cwd) "deps.edn"))
+   (count-deps-aliases (join-paths (home-dir) ".clojure" "deps.edn"))
    42))
 
 ;; Experimenting with injecting using a separate -impl helper.
@@ -48,10 +48,11 @@
   ;; Note: in practice we would probably pass these down as map.
   ;; But it is less code to pass positionally and given it is hidden from
   ;; public interface it seems fine.
-  (count-system-aliases-impl infra/cwd infra/home-dir count-deps-aliases))
+  (count-system-aliases-impl infra/cwd infra/home-dir infra/join-paths count-deps-aliases))
 
 (defn make-null-count-system-aliases [& {:keys [cwd home-dir count-deps-aliases]}]
   (partial count-system-aliases-impl
            (infra/make-null-cwd cwd)
            (infra/make-null-home-dir home-dir)
+           (infra/make-null-join-paths)
            (make-null-count-deps-aliases count-deps-aliases)))

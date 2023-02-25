@@ -71,3 +71,11 @@
 
   (testing "nullable can be configured"
     (is (= "/another/directory" ((infra/make-null-cwd {:path "/another/directory"}))))))
+
+(deftest join-paths-test
+  (doseq [[title join-paths] [["real" infra/join-paths]
+                              ["null" (infra/make-null-join-paths)]]]
+    (testing title
+      (is (= "a" (join-paths "a")))
+      (is (= "a/b" (join-paths "a" "b")))
+      (is (= "a/b/c" (join-paths "a" "b" "c"))))))

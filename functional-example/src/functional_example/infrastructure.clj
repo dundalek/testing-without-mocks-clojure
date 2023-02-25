@@ -1,7 +1,10 @@
 (ns functional-example.infrastructure
   (:refer-clojure :exclude [slurp])
+  (:require
+   [clojure.java.io :as io])
   (:import
-   (java.io FileNotFoundException)))
+   (java.io File FileNotFoundException)
+   (java.nio.file Path)))
 
 ;; ## Infrastructure Wrappers
 
@@ -42,8 +45,8 @@
   ([getenv]
    (getenv "HOME")))
 
-;; Parameterless Instantiation pattern helps to reduce boilerplate in test code.
-;; Enabled by Embedded Stub pattern with sensible defaults and kwargs.
+;; Parameterless Instantiation pattern enabled by sensible defaults and kwargs
+;; helps to reduce boilerplate in test code.
 (defn make-null-home-dir [& {:keys [path]}]
   (let [path (or path "/home/someuser")]
     (partial home-dir (make-null-getenv {"HOME" path}))))
@@ -58,3 +61,45 @@
   (let [path (or path "/some/current/directory")]
     (partial cwd (make-null-get-system-property
                   {"user.dir" path}))))
+
+;; ## Embedded Stubs example below
+
+;; This example can be adapted to create infrastructure wrappers for 3rd party
+;; libraries, SDKs, HTTP clients, etc.
+
+;; We can make stubbed instances that implement interfaces with `reify`.
+(defn- make-stubbed-path [pathname]
+  (reify Path
+    (^Path resolve [_this ^String other]
+      (make-stubbed-path (str pathname "/" other)))
+    (toString [_this]
+      pathname)))
+
+;; Make stubbed class instances with `proxy`. Note that `proxy` still calls the
+;; base class constructor. In this example we rely on the fact that File
+;; complies with Zero-Impact Instantiation and doesn't perform visible side
+;; effects in its constructor.
+;; When this is not possible we will need to create a custom protocol with two
+;; implementations (real and nulled), but should keep it as small as possible
+;; according to the Thin Wrapper pattern.
+(defn- make-stubbed-file [pathname]
+  (proxy [File] [""]
+    (toPath []
+      (make-stubbed-path pathname))))
+
+;; Following is a bit involved way to join file paths. The implementation uses
+;; Java classes directly to demonstrate usage of the Embedded Stub pattern.
+(defn- join-paths-impl [make-file base & others]
+  (let [base-path (-> (make-file base)
+                      (.toPath))]
+    (-> (reduce (fn [path other]
+                  (.resolve path other))
+                base-path
+                others)
+        str)))
+
+(defn join-paths [base & others]
+  (apply join-paths-impl io/file base others))
+
+(defn make-null-join-paths []
+  (partial join-paths-impl make-stubbed-file))
