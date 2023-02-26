@@ -1,7 +1,8 @@
 (ns functional-example.infrastructure
-  (:refer-clojure :exclude [slurp])
+  (:refer-clojure :exclude [println slurp])
   (:require
-   [clojure.java.io :as io])
+   [clojure.java.io :as io]
+   [clojure.string :as str])
   (:import
    (java.io File FileNotFoundException)
    (java.nio.file Path)))
@@ -36,6 +37,19 @@
 (defn make-null-getenv [& {:as env-map}]
   (fn [name]
     (get env-map name)))
+
+(def println clojure.core/println)
+
+(defn make-null-println []
+  (let [!lines (atom [])]
+    ;; Experiment of just using ad-hoc map of functions without the need to
+    ;; introduce additional protocols for test implementations.
+    {:println (fn [line]
+                ;; In practice we would need to support also zero or multiple arguments.
+                (swap! !lines conj line)
+                (swap! !lines conj "\n"))
+     :get-output (fn []
+                   (str/join "" @!lines))}))
 
 ;; ## Higher-level infrastructure
 

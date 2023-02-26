@@ -56,3 +56,15 @@
            (infra/make-null-home-dir home-dir)
            (infra/make-null-join-paths)
            (make-null-count-deps-aliases count-deps-aliases)))
+
+(defn- run-impl [println count-system-aliases]
+  (println (count-system-aliases)))
+
+(defn run []
+  (run-impl infra/println count-system-aliases))
+
+(defn make-null-run [& {:keys [count-system-aliases]}]
+  (let [{:keys [println get-output]} (infra/make-null-println)
+        run (partial run-impl println (make-null-count-system-aliases count-system-aliases))]
+    {:run run
+     :get-output get-output}))

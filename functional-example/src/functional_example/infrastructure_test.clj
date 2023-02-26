@@ -58,6 +58,28 @@
     (is (= nil (infra/getenv "__NoN_eXiSTiNG_eNV__")))
     (is (= nil ((infra/make-null-getenv) "__NoN_eXiSTiNG_eNV__")))))
 
+;; In practice we would need to implement additional functionality of the
+;; prinln nullable to match the real one, for example calling with no arguments
+;; with with multiple arguments.
+(deftest println-test
+  (let [{:keys [println get-output]} (infra/make-null-println)]
+    (println "hello")
+    (is (= "hello\n" (get-output))))
+
+  (let [{:keys [println get-output]} (infra/make-null-println)]
+    (println "hello")
+    (println "world")
+    (is (= "hello\nworld\n" (get-output))))
+
+  (is (= "hello\n"
+         (with-out-str
+           (infra/println "hello"))))
+
+  (is (= "hello\nworld\n"
+         (with-out-str
+           (infra/println "hello")
+           (infra/println "world")))))
+
 (deftest home-dir-test
   (testing "nullable uses embedded stub with a sensible default"
     (is (= "/home/someuser" ((infra/make-null-home-dir)))))

@@ -1,8 +1,8 @@
 (ns functional-example.app-test
   (:require
    [clojure.test :refer [deftest is testing]]
-   [functional-example.app :refer [make-null-count-system-aliases
-                                   make-null-count-deps-aliases]]
+   [functional-example.app :as app :refer [make-null-count-system-aliases
+                                           make-null-count-deps-aliases]]
    [functional-example.infrastructure :as infra]))
 
 ;; Overlapping Sociable Tests pattern, James Shore writes:
@@ -82,3 +82,15 @@
     (is (= 1 ((make-null-count-deps-aliases
                {:slurp {"x" "{:aliases {:a {}}}"}})
               "x")))))
+
+(deftest run-test
+  (let [{:keys [run get-output]} (app/make-null-run)]
+    (run)
+    (is (= "42\n" (get-output))))
+
+  (let [{:keys [run get-output]} (app/make-null-run
+                                  {:count-system-aliases
+                                   {:count-deps-aliases
+                                    {:slurp {"/some/current/directory/deps.edn" "{:aliases {:a {}}}"}}}})]
+    (run)
+    (is (= "1\n" (get-output)))))
